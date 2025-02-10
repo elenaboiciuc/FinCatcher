@@ -1,0 +1,19 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Financial Tracking</title>
+</head>
+<body>
+    <div style="width: 150px; float: left; background-color: #E6E6FA; padding: 15px; box-shadow: 2px 0px 5px rgba(0,0,0,0.1); height: 100vh;">
+        <a href="{{ url_for('main.home') }}" style="display: block; padding: 10px; color: #333; text-decoration: none; margin-bottom: 10px;">Overview</a>
+        <a href="{{ url_for('transactions.transactions_page') }}" style="display: block; padding: 10px; color: #333; text-decoration: none; margin-bottom: 10px;">Transactions</a>
+        <a href="{{ url_for('budgets.budgets_page') }}" style="display: block; padding: 10px; color: #333; text-decoration: none; margin-bottom: 10px;">Budgets</a>
+        <a href="{{ url_for('goals.goals_page') }}" style="display: block; padding: 10px; color: #333; text-decoration: none; margin-bottom: 10px;">Goals</a>
+         <a href="{{ url_for('categories.categories_page') }}" style="display: block; padding: 10px; color: #333; text-decoration: none; margin-bottom: 10px;">Categories</a>
+    </div>
+    <div style="margin-left: 220px; padding: 20px;">
+        {% block content %}{% endblock %}
+    </div>
+</body>
+</html>
