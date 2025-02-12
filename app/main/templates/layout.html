@@ -2,17 +2,94 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>Financial Tracking</title>
+    <title>FinCatcher</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Poiret+One&display=swap" rel="stylesheet">
+    <style>
+        body {
+            margin: 0;
+            font-family: Arial, sans-serif;
+            background-color: #F5F5F5;
+            color: #2c3e50;
+        }
+        .header {
+            background-color: #e6e6fa;
+            padding: 10px 20px;
+            display: flex;
+            align-items: center;
+            box-shadow: 0px 2px 5px rgba(0, 0, 0, 0.1);
+        }
+        .header img {
+            height: 50px; /* Adjusted to match design */
+            margin-right: 10px;
+        }
+        .header h1 {
+            margin: 0;
+            font-size: 24px;
+            font-family: 'Poiret One', cursive;
+            color: #de3163;
+            text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.5);
+        }
+        .page-title {
+            font-size: 20px;
+            margin-left: 60px; /* Space between FinCatcher and page title */
+            color: #2c3e50;
+        }
+        .sidebar {
+            width: 200px;
+            float: left;
+            background-color: #e6e6fa;
+            padding: 15px;
+            box-shadow: 2px 0px 5px rgba(0, 0, 0, 0.1);
+            height: 100vh;
+        }
+        .sidebar a {
+            display: flex;
+            align-items: center;
+            padding: 10px;
+            color: #2c3e50;
+            text-decoration: none;
+            margin-bottom: 10px;
+            transition: background-color 0.3s, color 0.3s;
+        }
+        .sidebar a:hover {
+            background-color: #de3163;
+            color: #fff;
+        }
+        .sidebar a i {
+            margin-right: 10px;
+        }
+        .sidebar-bottom {
+            margin-top: 330px;
+        }
+        .sidebar-bottom a {
+            margin-bottom: -20px;
+        }
+        .content {
+            margin-left: 220px;
+            padding: 20px;
+        }
+    </style>
 </head>
 <body>
-    <div style="width: 150px; float: left; background-color: #E6E6FA; padding: 15px; box-shadow: 2px 0px 5px rgba(0,0,0,0.1); height: 100vh;">
-        <a href="{{ url_for('main.home') }}" style="display: block; padding: 10px; color: #333; text-decoration: none; margin-bottom: 10px;">Overview</a>
-        <a href="{{ url_for('transactions.transactions_page') }}" style="display: block; padding: 10px; color: #333; text-decoration: none; margin-bottom: 10px;">Transactions</a>
-        <a href="{{ url_for('budgets.budgets_page') }}" style="display: block; padding: 10px; color: #333; text-decoration: none; margin-bottom: 10px;">Budgets</a>
-        <a href="{{ url_for('goals.goals_page') }}" style="display: block; padding: 10px; color: #333; text-decoration: none; margin-bottom: 10px;">Goals</a>
-         <a href="{{ url_for('categories.categories_page') }}" style="display: block; padding: 10px; color: #333; text-decoration: none; margin-bottom: 10px;">Categories</a>
+    <div class="header">
+        <img src="static/images/dreamcatcher.gif" alt="Dream Catcher">
+        <h1>FinCatcher</h1>
+        <span class="page-title"><i class="{{ icon }}"></i> {{ page_title }}</span>  <!-- Dynamic icon and title -->
     </div>
-    <div style="margin-left: 220px; padding: 20px;">
+    <div class="sidebar">
+        <a href="{{ url_for('main.home') }}"><i class="fas fa-home"></i>Overview</a>
+        <a href="{{ url_for('transactions.transactions_page') }}"><i class="fas fa-credit-card"></i>Transactions</a>
+        <a href="{{ url_for('budgets.budgets_page') }}"><i class="fa-solid fa-coins"></i>Budgets</a>
+        <a href="{{ url_for('goals.goals_page') }}"><i class="fas fa-bullseye"></i>Goals</a>
+        <a href="{{ url_for('categories.categories_page') }}"><i class="fas fa-folder"></i>Categories</a>
+
+        <div class="sidebar-bottom">
+            <a href="{{ url_for('main.home') }}"><i class="fas fa-user"></i>Sign Out</a><br>
+            <a href="{{ url_for('main.home') }}"><i class="fas fa-question-circle"></i>Help</a>
+        </div>
+    </div>
+    <div class="content">
         {% block content %}{% endblock %}
     </div>
 </body>

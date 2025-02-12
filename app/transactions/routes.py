@@ -55,4 +55,4 @@ def transactions_page():
     transactions_list = query.all()
     categories = Categories.query.all()
 
-    return render_template('show_transactions.html', transactions=transactions_list, categories=categories)
+    return render_template('show_transactions.html', transactions=transactions_list, categories=categories, page_title='Transactions', icon='fas fa-credit-card')

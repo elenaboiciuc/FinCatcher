@@ -9,4 +9,4 @@ def categories_page():
     # Fetch all categories from the database
     categories_list = Categories.query.all()
 
-    return render_template('show_categories.html', categories=categories_list)
+    return render_template('show_categories.html', categories=categories_list, page_title='Categories', icon='fas fa-folder')
