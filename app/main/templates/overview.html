@@ -1,0 +1,12 @@
+{% extends "layout.html" %}
+
+{% block content %}
+<div style="display: flex; justify-content: space-around; flex-wrap: wrap;">
+    <div style="flex: 0 0 40%; min-width: 300px; margin: 20px;">
+        {{ bar_graph|safe }}
+    </div>
+    <div style="flex: 0 0 50%; min-width: 300px; margin: 20px;">
+        {{ pie_graph|safe }}
+    </div>
+</div>
+{% endblock %}

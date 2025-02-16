@@ -1,8 +1,8 @@
-"""Recreate database app
+"""recreate database
 
-Revision ID: 66ced3422d54
+Revision ID: 883ccd79ad07
 Revises: 
-Create Date: 2025-02-10 22:24:38.299283
+Create Date: 2025-02-16 00:53:15.720643
 
 """
 from alembic import op
@@ -10,7 +10,7 @@ import sqlalchemy as sa
 
 
 # revision identifiers, used by Alembic.
-revision = '66ced3422d54'
+revision = '883ccd79ad07'
 down_revision = None
 branch_labels = None
 depends_on = None

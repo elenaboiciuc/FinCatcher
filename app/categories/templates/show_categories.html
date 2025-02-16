@@ -1,18 +1,22 @@
 {% extends "layout.html" %}
 {% block content %}
-<div style="display: flex; flex-direction: row; justify-content: flex-start; background-color: #F5F5F5; padding: 20px;">
+<div style="display: flex; flex-direction: row; justify-content: flex-start; background-color: #FFFFFF; padding: 20px;">
     <!-- Categories List -->
     <div id="categories-list" style="padding: 15px; box-shadow: 2px 2px 5px rgba(0,0,0,0.1); width: 100%; background-color: #FFFFFF;">
         <table style="width: 100%; border-collapse: collapse; text-align: left; font-size: 14px; color: #333333;">
-            <thead style="background-color: #DE3163; color: #333333;">
+            <thead style="background-color: #E6E6FA; color: #DE3163; font-size: 18px;">
                 <tr>
-                    <th style="padding: 10px; border: 1px solid #DDD;">Name</th>
+                    <th style="padding: 10px; border: 1px solid #DDD;"></th> <!-- For icon -->
+                    <th style="padding: 10px; border: 1px solid #DDD;">Category</th>
                     <th style="padding: 10px; border: 1px solid #DDD;">Description</th>
                 </tr>
             </thead>
             <tbody>
                 {% for category in categories %}
                 <tr style="background-color: {% if loop.index0 % 2 == 0 %} #FFFFFF {% else %} #F5F5F5 {% endif %};">
+                    <td style="padding: 0; border: 1px solid #DDD; text-align: center;">
+                        <img src="{{ category_icons[category.id] }}" alt="{{ category.id }} icon" style="width:24px; height:24px;">
+                    </td>
                     <td style="padding: 10px; border: 1px solid #DDD;">{{ category.name }}</td>
                     <td style="padding: 10px; border: 1px solid #DDD;">{{ category.description }}</td>
                 </tr>
