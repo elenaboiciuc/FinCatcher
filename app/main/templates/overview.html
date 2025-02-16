@@ -1,12 +1,28 @@
 {% extends "layout.html" %}
 
 {% block content %}
-<div style="display: flex; justify-content: space-around; flex-wrap: wrap;">
-    <div style="flex: 0 0 40%; min-width: 300px; margin: 20px;">
-        {{ bar_graph|safe }}
+<div style="display: flex; justify-content: space-around; flex-wrap: wrap; margin-top: 20px;">
+    <div style="flex: 0 0 25%; max-width: 250px; margin: 10px; box-shadow: 2px 2px 5px rgba(0,0,0,0.1); background-color: #FFFFFF; display: flex; justify-content: center; align-items: center; height: 150px;">
+        <div style="font-size: 16px; color: #333333;">
+            TBD
+        </div>
     </div>
-    <div style="flex: 0 0 50%; min-width: 300px; margin: 20px;">
-        {{ pie_graph|safe }}
+    <div style="flex: 0 0 30%; min-width: 300px; margin: 10px; box-shadow: 2px 2px 5px rgba(0,0,0,0.1); background-color: #FFFFFF;">
+            {{ last_month_donut_graph|safe }}
+    </div>
+    <div style="flex: 0 0 30%; min-width: 300px; margin: 10px; box-shadow: 2px 2px 5px rgba(0,0,0,0.1); background-color: #FFFFFF;">
+            {{ current_month_donut_graph|safe }}
     </div>
 </div>
+
+<div style="display: flex; justify-content: space-around; flex-wrap: wrap; margin-top: 20px;">
+    <div style="flex: 0 0 48%; min-width: 300px; margin: 10px; box-shadow: 2px 2px 5px rgba(0,0,0,0.1); background-color: #FFFFFF;">
+        {{ pie_graph|safe }}
+    </div>
+    <div style="flex: 0 0 100%; min-width: 300px; margin: 10px; box-shadow: 2px 2px 5px rgba(0,0,0,0.1); background-color: #FFFFFF;">
+        {{ bar_graph|safe }}
+    </div>
+</div>
+
+<script src="https://cdn.plot.ly/plotly-latest.min.js"></script> <!-- Ensure Plotly.js is included -->
 {% endblock %}
