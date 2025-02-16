@@ -67,7 +67,7 @@ def transactions_page():
         start_date = datetime.strptime(filter_month + '-01', '%Y-%m-%d')
         last_day = monthrange(new_year, new_month)[1]
         end_date = datetime.strptime(f'{filter_month}-{last_day}', '%Y-%m-%d')
-        query = query.filter(Transactions.date >= start_date, Transactions.date <= end_date)
+        query = query.filter(Transactions.date >= start_date, Transactions.date <= end_date).order_by(Transactions.date.asc())
     if filter_category:
         query = query.filter(Transactions.category_id == filter_category)
     if filter_type:
