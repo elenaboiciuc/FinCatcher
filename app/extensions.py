@@ -9,24 +9,6 @@ migrate = Migrate()
 # bcrypt =
 # login_manager =
 
-# category_icons = {
-#     'Food': 'static/images/food.png',
-#     'Utilities': 'static/images/utilities1.png',
-#     'Entertainment': 'static/images/entertainment.png',
-#     'Transportation': 'static/images/transportation.png',
-#     'Housing': 'static/images/housing.png',
-#     'Healthcare': 'static/images/healthcare2.png',
-#     'Insurance': 'static/images/insurance.png',
-#     'Education': 'static/images/education.png',
-#     'Personal Care': 'static/images/personal_care2.png',
-#     'Savings': 'static/images/savings.png',
-#     'Gifts and Donations': 'static/images/gifts_donations.png',
-#     'Vacations': 'static/images/vacations.png',
-#     'Earnings': 'static/images/earnings.png',
-#     'Shopping': 'static/images/shopping.png',
-#     'Pets': 'static/images/pets.png',
-#     'Others': 'static/images/others.png'
-# }
 
 category_icons = {
     1: 'static/images/food.png',
@@ -46,6 +28,32 @@ category_icons = {
     15: 'static/images/pets.png',
     16: 'static/images/others.png'
 }
+
+financial_quotes = {
+    1: "A penny saved is a penny earned. 💰",
+    2: "Save first, spend what’s left. 💸",
+    3: "Wealth is what you keep, not what you make. 🏦",
+    4: "The best time to start saving is now. ⏰",
+    5: "Budgeting makes room for what you love. ❤️",
+    6: "Make saving a priority. 🔑",
+    7: "Money helps you live on your terms. 🌟",
+    8: "Financial freedom starts with knowledge. 📚",
+    9: "Avoid impulse buys. ⛔",
+    10: "Spend less than you earn. ✂️",
+    11: "Smart saving today, secure tomorrow. 🌼",
+    12: "Money should serve you, not rule you. ⚖️",
+    13: "Saving teaches discipline. 📈",
+    14: "Invest in yourself first. 🌍",
+    15: "Stay financially educated. 🧠",
+    16: "Don’t let money control your life. 🚫",
+    17: "Save a little, gain a lot. 🌟",
+    18: "Debt and ignorance don’t mix. ⚠️",
+    19: "Only save what’s extra. ✨",
+    20: "Start small, grow your savings. 🌿",
+    21: "Shop smart, save big. 🛒",
+    22: "Save for snow. ❄️",
+}
+
 
 
 

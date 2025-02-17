@@ -2,9 +2,15 @@
 
 {% block content %}
 <div style="display: flex; justify-content: space-around; flex-wrap: wrap; margin-top: 20px;">
-    <div style="flex: 0 0 25%; max-width: 250px; margin: 10px; box-shadow: 2px 2px 5px rgba(0,0,0,0.1); background-color: #FFFFFF; display: flex; justify-content: center; align-items: center; height: 150px;">
-        <div style="font-size: 16px; color: #333333;">
-            TBD
+    <div style="flex: 0 0 25%; max-width: 250px; margin: 10px; box-shadow: 2px 2px 5px rgba(0,0,0,0.1); background-color: #FFFFFF; display: flex; flex-direction: column; justify-content: center; align-items: center; height: 250px;">
+        <div style="font-size: 20px; color: #333333;">
+            Hello, Elena!
+        </div>
+        <div style="font-size: 15px; color: #333333; margin-top: 10px; text-align: center; padding: 18px">
+            {{ random_quote }}
+        </div>
+        <div style="font-size: 15px; color: {% if current_balance >= 0 %}#B0C56B{% else %}#DE3163{% endif %}; margin-top: 20px; text-align: center;">
+            Balance: {{ current_balance }}
         </div>
     </div>
     <div style="flex: 0 0 30%; min-width: 300px; margin: 10px; box-shadow: 2px 2px 5px rgba(0,0,0,0.1); background-color: #FFFFFF;">
@@ -16,6 +22,9 @@
 </div>
 
 <div style="display: flex; justify-content: space-around; flex-wrap: wrap; margin-top: 20px;">
+    <div style="flex: 0 0 48%; min-width: 300px; margin: 10px; box-shadow: 2px 2px 5px rgba(0,0,0,0.1); background-color: #FFFFFF;">
+        {{ savings_line_chart|safe }}
+    </div>
     <div style="flex: 0 0 48%; min-width: 300px; margin: 10px; box-shadow: 2px 2px 5px rgba(0,0,0,0.1); background-color: #FFFFFF;">
         {{ pie_graph|safe }}
     </div>

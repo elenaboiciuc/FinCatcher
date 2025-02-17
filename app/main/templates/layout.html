@@ -18,6 +18,11 @@
             display: flex;
             align-items: center;
             box-shadow: 0px 2px 5px rgba(0, 0, 0, 0.1);
+            position: fixed; /* Fix the header position */
+            top: 0; /* Align it to the top */
+            height: 35px;
+            width: 100%; /* Full width */
+            z-index: 1000; /* Ensure it stays above other elements */
         }
         .header img {
             height: 50px;
@@ -31,17 +36,24 @@
             text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.5);
         }
         .page-title {
-            font-size: 18px;
+            font-size: 16px;
             margin-left: 60px;
             color: #2c3e50;
         }
         .sidebar {
             width: 200px;
-            float: left;
+            position: fixed;
+            top: 50px;
+            left: 0;
             background-color: #e6e6fa;
             padding: 15px;
             box-shadow: 2px 0px 5px rgba(0, 0, 0, 0.1);
-            height: 100vh;
+            height: calc(100vh - 50px);
+            display: flex;
+            flex-direction: column;
+        }
+        .sidebar-main {
+            flex-grow: 1;
         }
         .sidebar a {
             display: flex;
@@ -60,14 +72,13 @@
             margin-right: 10px;
         }
         .sidebar-bottom {
-            margin-top: 330px;
-        }
-        .sidebar-bottom a {
-            margin-bottom: -20px;
+            margin-top: auto;
+            margin-bottom: 20px;
         }
         .content {
             margin-left: 220px;
             padding: 20px;
+            padding-top: 60px; /* Adjust padding to account for fixed header */
         }
     </style>
 </head>
@@ -78,14 +89,15 @@
         <span class="page-title"><i class="{{ icon }}"></i> {{ page_title }}</span>
     </div>
     <div class="sidebar">
-        <a href="{{ url_for('main.overview') }}"><i class="fas fa-home"></i>Overview</a>
-        <a href="{{ url_for('transactions.transactions_page') }}"><i class="fas fa-credit-card"></i>Transactions</a>
-        <a href="{{ url_for('budgets.budgets_page') }}"><i class="fa-solid fa-coins"></i>Budgets</a>
-        <a href="{{ url_for('goals.goals_page') }}"><i class="fas fa-bullseye"></i>Goals</a>
-        <a href="{{ url_for('categories.categories_page') }}"><i class="fas fa-folder"></i>Categories</a>
-
+        <div class="sidebar-main">
+            <a href="{{ url_for('main.overview') }}"><i class="fas fa-home"></i>Overview</a>
+            <a href="{{ url_for('transactions.transactions_page') }}"><i class="fas fa-credit-card"></i>Transactions</a>
+            <a href="{{ url_for('budgets.budgets_page') }}"><i class="fa-solid fa-coins"></i>Budgets</a>
+            <a href="{{ url_for('goals.goals_page') }}"><i class="fas fa-bullseye"></i>Goals</a>
+            <a href="{{ url_for('categories.categories_page') }}"><i class="fas fa-folder"></i>Categories</a>
+        </div>
         <div class="sidebar-bottom">
-            <a href="{{ url_for('main.home') }}"><i class="fas fa-user"></i>Sign Out</a><br>
+            <a href="{{ url_for('main.home') }}"><i class="fas fa-user"></i>Sign Out</a>
             <a href="{{ url_for('help_sign_out.help_page') }}"><i class="fas fa-question-circle"></i>Help</a>
         </div>
     </div>
