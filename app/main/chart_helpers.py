@@ -35,7 +35,7 @@ def create_bar_chart(df):
     return px.bar(
         df, x='Month', y='Amount', color='Type',
         title='Last 6 Months Expenses vs Income',
-        color_discrete_map={'income': '#659157', 'expense': '#db6c79'},
+        color_discrete_map={'income': '#4e598c', 'expense': '#db6c79'},
         barmode='group').to_html(full_html=False)
 
 def create_pie_chart(transactions):
@@ -43,6 +43,7 @@ def create_pie_chart(transactions):
             'Amount': []}
     for t in transactions:
         if t.type == 'expense':
+            # Append the icon to the category name
             data['Category'].append(t.category.name)
             data['Amount'].append(t.amount)
     df = pd.DataFrame(data).groupby('Category').sum().reset_index().nlargest(5, 'Amount')
@@ -53,26 +54,27 @@ def create_pie_chart(transactions):
 
 
 def create_donut_chart(transactions, title):
-    # Prepare a DataFrame for transactions
-    df = pd.DataFrame({
-        'Type': [t.type for t in transactions if t.category_id != 10],
-        'Amount': [t.amount for t in transactions if t.category_id != 10]
-    })
-    df = df.groupby(['Type']).sum().reset_index()
+    # Prepare a DataFrame for transactions and group by 'Type'
+    df = (
+        pd.DataFrame({
+            'Type': [t.type for t in transactions if t.category_id != 10],
+            'Amount': [t.amount for t in transactions if t.category_id != 10]
+        }).groupby('Type').sum().reset_index()
+    )
 
-    # Create the donut chart with explicit color mapping
+    # Create the donut chart
     donut_fig = px.pie(
         df,
         values='Amount',
         names='Type',
         title=title,
         hole=0.5,
-        color='Type',  # Set colors based on the Type column
-        color_discrete_map={'income': '#CCDF92', 'expense': '#DE3163'},  # Map income to green and expense to red
+        color='Type',
+        color_discrete_map={'income': '#CCDF92', 'expense': '#DE3163'},
         width=300,
         height=250
-    ).update_traces(textinfo='none')  # Do not display any text on the chart itself
-
+    )
+    # Set layout properties
     donut_fig.update_layout(
         title_font_size=14,
         legend=dict(font=dict(size=10))
