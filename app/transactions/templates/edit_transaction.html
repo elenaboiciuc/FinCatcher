@@ -26,7 +26,10 @@
             <option value="income" {% if transaction.type == 'income' %}selected{% endif %}>Income</option>
         </select>
 
-        <button type="submit" style="background-color: #9370DB; color: white; padding: 10px; border: none; border-radius: 4px; cursor: pointer;">Save Changes</button>
+        <div style="display: flex; gap: 10px;">
+            <button type="submit" style="background-color: #9370DB; color: white; padding: 10px; border: none; border-radius: 4px; cursor: pointer; font-size: 14px;">Save Changes</button>
+            <button type="button" onclick="window.location.href='{{ url_for('transactions.transactions_page') }}'" style="background-color: #DC143C; color: white; padding: 10px; border: none; border-radius: 4px; cursor: pointer; font-size: 14px;">Cancel</button>
+        </div>
     </form>
 </div>
 {% endblock %}

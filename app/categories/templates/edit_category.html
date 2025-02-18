@@ -1,0 +1,22 @@
+{% extends "layout.html" %}
+{% block content %}
+<div style="padding: 20px;">
+    <h1 style="color: #DE3163; font-size: 24px;">Edit Category</h1>
+    <form action="{{ url_for('categories.edit_category', id=category.id) }}" method="POST" style="display: flex; flex-direction: column; gap: 10px; background-color: #f9f9f9; padding: 20px; border-radius: 8px; box-shadow: 0 0 10px rgba(0,0,0,0.1);">
+
+        <img src="{{ category_icons[category.id] }}" alt="{{ category.id }} icon" style="width:24px; height:24px;">
+
+        <label for="name" style="color: #4B0082;">Name:</label>
+        <input type="text" step="0.01" id="name" name="name" value="{{ category.name }}" required style="padding: 8px; border: 1px solid #4B0082; border-radius: 4px;">
+
+        <label for="description" style="color: #4B0082;">Description:</label>
+        <input type="text" id="description" name="description" value="{{ category.description }}" style="padding: 8px; border: 1px solid #4B0082; border-radius: 4px;">
+
+
+        <div style="display: flex; gap: 10px;">
+            <button type="submit" style="background-color: #9370DB; color: white; padding: 10px; border: none; border-radius: 4px; cursor: pointer; font-size: 14px;">Save Changes</button>
+            <button type="button" onclick="window.location.href='{{ url_for('categories.categories_page') }}'" style="background-color: #DC143C; color: white; padding: 10px; border: none; border-radius: 4px; cursor: pointer; font-size: 14px;">Cancel</button>
+        </div>
+    </form>
+</div>
+{% endblock %}
