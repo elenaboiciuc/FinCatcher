@@ -10,7 +10,6 @@ from .chart_helpers import (
 )
 
 
-
 @main.route('/')
 def home():
     return render_template('layout.html', page_title='Home', icon='fas fa-home')

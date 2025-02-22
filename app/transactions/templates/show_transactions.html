@@ -1,12 +1,35 @@
 {% extends "layout.html" %}
 {% block content %}
+
+{% with messages = get_flashed_messages(with_categories=true) %}
+    {% if messages %}
+        <div>
+            {% for category, message in messages %}
+                <div style="position: relative; margin-bottom: 15px; padding: 10px; border-radius: 4px; width: 90%; margin: 10px auto; text-align: center; border: 1px solid transparent;
+                            {% if category == 'success' %}
+                                background-color: #dff0d8; border-color: #d0e9c6; color: #3c763d;
+                            {% elif category == 'error' %}
+                                background-color: #f2dede; border-color: #ebccd1; color: #a94442;
+                            {% else %}
+                                background-color: #d9edf7; border-color: #bcdff1; color: #31708f;
+                            {% endif %}"
+                     class="flash-message">
+
+                    <!-- X button to close the message -->
+                    <button onclick="this.parentElement.style.display='none';" style="position: absolute; top: 5px; right: 10px; background: none; border: none; font-size: 16px; color: inherit; cursor: pointer;">&times;</button>
+
+                    {{ message }}
+                </div>
+            {% endfor %}
+        </div>
+    {% endif %}
+{% endwith %}
+
 <div style="display: flex; flex-direction: row; justify-content: flex-start;">
     <!-- Forms Container -->
     <div style="display: flex; flex-direction: column; margin-right: 20px;">
         <!-- Filter Form -->
         <form id="filter-form" action="{{ url_for('transactions.transactions_page') }}" method="GET" style="background-color: #E6E6FA; padding: 10px; box-shadow: 2px 2px 5px rgba(0,0,0,0.1); margin-bottom: 20px; width: 150px;">
-<!--            <h3 style="color: #333333; margin-bottom: 10px;">Filter Transactions</h3>-->
-
             <label for="filter-month" style="margin-bottom: 2px;">Month:</label>
             <input type="month" id="filter-month" name="filter_month" style="margin-bottom: 10px; width: 100%;" required style="margin-bottom: 10px; width: 100%;">
 
@@ -35,7 +58,7 @@
             <input type="date" id="date" name="date" required style="margin-bottom: 10px; width: 100%;">
 
             <label for="amount" style="margin-bottom: 2px;">Amount:</label>
-            <input type="number" step="0.01" id="amount" name="amount" required style="margin-bottom: 10px; width: 100%;">
+            <input type="number" step="0.01" id="amount" name="amount" required min="0.1" required style="margin-bottom: 10px; width: 100%;">
 
             <label for="category_id" style="margin-bottom: 2px;">Category:</label>
             <select id="category_id" name="category_id" required style="margin-bottom: 10px; width: 100%;">
@@ -91,7 +114,7 @@
                     {% for transaction in transactions %}
                     <tr style="background-color: {% if loop.index0 % 2 == 0 %}#FFFFFF{% else %}#F8F8FF{% endif %};">
                         <td style="padding: 0; border: 1px solid #DDD; text-align: center;">
-                            <img src="{{ category_icons[transaction.category_id] }}" alt="Category icon" style="width:24px; height:24px;">
+                            <img src="{{ category_icons[transaction.category_id if transaction.category_id <= 16 else 17] }}" alt="Category icon" style="width:24px; height:24px;">
                         </td>
                         <td style="padding: 10px; border: 1px solid #DDD;">{{ transaction.date }}</td>
                         <td style="padding: 10px; border: 1px solid #DDD;">
@@ -118,7 +141,7 @@
                         <td style="padding: 0; border: 1px solid #DDD; text-align: center;">
                             <div style="display: flex; justify-content: center; align-items: center; gap: 0;">
                                 <!-- DELETE ACTION -->
-                                <a href="{{ url_for('transactions.delete_transaction', id=transaction.id) }}" class="delete-btn" style="display: flex; justify-content: center; align-items: center; width: 24px; height: 24px; text-align: center; color: #4B0082;" onclick="confirmDelete(event, {{ transaction.id }});">
+                                <a href="{{ url_for('transactions.delete_transaction', id=transaction.id) }}" class="delete-btn" style="display: flex; justify-content: center; align-items: center; width: 24px; height: 24px; color: #4B0082;" onclick="confirmDelete(event, {{ transaction.id }});">
                                     <i class="fas fa-trash-alt"></i>
                                 </a>
                                 <form id="delete-form-{{ transaction.id }}" action="{{ url_for('transactions.delete_transaction', id=transaction.id) }}" method="POST" style="display: none;">

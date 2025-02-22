@@ -12,21 +12,42 @@ migrate = Migrate()
 
 category_icons = {
     1: 'static/images/food.png',
-    2: 'static/images/utilities1.png',
+    2: 'static/images/utilities.png',
     3: 'static/images/entertainment.png',
     4: 'static/images/transportation.png',
     5: 'static/images/housing.png',
-    6: 'static/images/healthcare2.png',
+    6: 'static/images/healthcare.png',
     7: 'static/images/insurance.png',
     8: 'static/images/education.png',
-    9: 'static/images/personal_care3.png',
+    9: 'static/images/personal_care.png',
     10: 'static/images/savings.png',
-    11: 'static/images/gifts_donations2.png',
+    11: 'static/images/gifts_donations.png',
     12: 'static/images/vacations.png',
     13: 'static/images/earnings.png',
     14: 'static/images/shopping.png',
     15: 'static/images/pets.png',
-    16: 'static/images/others.png'
+    16: 'static/images/others.png',
+    17: 'static/images/new_category.png'
+}
+
+category_gifs = {
+    1: 'static/images/food.gif',
+    2: 'static/images/utilities.gif',
+    3: 'static/images/entertainment.gif',
+    4: 'static/images/transportation.gif',
+    5: 'static/images/housing.gif',
+    6: 'static/images/healthcare.gif',
+    7: 'static/images/insurance.gif',
+    8: 'static/images/education.gif',
+    9: 'static/images/personal_care.gif',
+    10: 'static/images/savings.gif',
+    11: 'static/images/gifts_donations.gif',
+    12: 'static/images/vacations.gif',
+    13: 'static/images/earnings.gif',
+    14: 'static/images/shopping.gif',
+    15: 'static/images/pets.gif',
+    16: 'static/images/others.gif',
+    17: 'static/images/new_category.gif'
 }
 
 financial_quotes = {

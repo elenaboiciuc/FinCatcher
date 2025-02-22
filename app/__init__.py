@@ -1,5 +1,5 @@
 from flask import Flask
-
+from app.export import export
 from app.help_sign_out import help_sign_out
 from app.help_sign_out.routes import help_page
 from app.main import main
@@ -26,5 +26,6 @@ def create_app():
     app.register_blueprint(goals)
     app.register_blueprint(categories)
     app.register_blueprint(help_sign_out)
+    app.register_blueprint(export)
 
     return app
