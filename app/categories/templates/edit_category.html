@@ -1,17 +1,39 @@
 {% extends "layout.html" %}
 {% block content %}
+
+{% with messages = get_flashed_messages(with_categories=true) %}
+    {% if messages %}
+        <div>
+            {% for category, message in messages %}
+                <div style="position: relative; margin-bottom: 15px; padding: 10px; border-radius: 4px; width: 90%; margin: 10px auto; text-align: center; border: 1px solid transparent;
+                            {% if category == 'success' %}
+                                background-color: #dff0d8; border-color: #d0e9c6; color: #3c763d;
+                            {% elif category == 'error' %}
+                                background-color: #f2dede; border-color: #ebccd1; color: #a94442;
+                            {% else %}
+                                background-color: #d9edf7; border-color: #bcdff1; color: #31708f;
+                            {% endif %}"
+                     class="flash-message">
+
+                    <!-- X button to close the message -->
+                    <button onclick="this.parentElement.style.display='none';" style="position: absolute; top: 5px; right: 10px; background: none; border: none; font-size: 16px; color: inherit; cursor: pointer;">&times;</button>
+
+                    {{ message }}
+                </div>
+            {% endfor %}
+        </div>
+    {% endif %}
+{% endwith %}
+
 <div style="padding: 20px;">
     <h1 style="color: #DE3163; font-size: 24px;">Edit Category</h1>
-    <form action="{{ url_for('categories.edit_category', id=category.id) }}" method="POST" style="display: flex; flex-direction: column; gap: 10px; background-color: #f9f9f9; padding: 20px; border-radius: 8px; box-shadow: 0 0 10px rgba(0,0,0,0.1);">
-
-        <img src="{{ category_icons[category.id] }}" alt="{{ category.id }} icon" style="width:24px; height:24px;">
-
+    <form action="{{ url_for('categories.edit_category', id=category.id) }}" method="POST" style="display: flex; flex-direction: column; gap: 10px; background-color: #ffffff; padding: 20px; border-radius: 8px; box-shadow: 0 0 10px rgba(0,0,0,0.1);">
+        <img src="/{{ category_gifs[category.id if category.id <= 16 else 17] }}" alt="{{ category.id }} icon" style="width:100px; height:100px; display: block; margin-left: auto; margin-right: auto;">
         <label for="name" style="color: #4B0082;">Name:</label>
         <input type="text" step="0.01" id="name" name="name" value="{{ category.name }}" required style="padding: 8px; border: 1px solid #4B0082; border-radius: 4px;">
 
         <label for="description" style="color: #4B0082;">Description:</label>
         <input type="text" id="description" name="description" value="{{ category.description }}" style="padding: 8px; border: 1px solid #4B0082; border-radius: 4px;">
-
 
         <div style="display: flex; gap: 10px;">
             <button type="submit" style="background-color: #9370DB; color: white; padding: 10px; border: none; border-radius: 4px; cursor: pointer; font-size: 14px;">Save Changes</button>

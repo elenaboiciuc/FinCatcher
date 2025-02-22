@@ -1,6 +1,7 @@
 import random
 import pandas as pd
 import plotly.express as px
+
 from app.main.models import Transactions
 
 def get_random_quote(quotes):
@@ -43,7 +44,6 @@ def create_pie_chart(transactions):
             'Amount': []}
     for t in transactions:
         if t.type == 'expense':
-            # Append the icon to the category name
             data['Category'].append(t.category.name)
             data['Amount'].append(t.amount)
     df = pd.DataFrame(data).groupby('Category').sum().reset_index().nlargest(5, 'Amount')
@@ -110,3 +110,4 @@ def create_line_chart(transactions):
     line_fig.update_traces(line=dict(color='#48bfe3'))
 
     return line_fig.to_html(full_html=False)
+
