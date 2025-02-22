@@ -5,17 +5,23 @@ from dateutil.relativedelta import relativedelta
 import pandas as pd
 from app.main.models import Transactions
 
+
 def export_to_csv(month):
-    # Assume 'month' is in 'YYYY-MM' format
+    # extract year and month from 'YYYY-MM' format
     year, month = month.split('-')
+    # create a datetime object for the first day of the given month
     start_date = datetime(int(year), int(month), 1)
+    # calculate the first day of the next month
     end_date = start_date + relativedelta(months=1)
 
+    # query the database for transactions within the specified month
     transactions = Transactions.query.filter(Transactions.date >= start_date,
                                              Transactions.date < end_date).all()
 
+    # prepare data for CSV export
     data = []
     for transaction in transactions:
+        # create a dictionary for each transaction
         data.append({
             'Date': transaction.date,
             'Amount': transaction.amount,
@@ -24,11 +30,37 @@ def export_to_csv(month):
             'Type': transaction.type,
         })
 
+    # convert the data to a pandas DataFrame
     df = pd.DataFrame(data)
+    #NOTE A DataFrame is a 2-dimensional labeled data structure in pandas, similar to a spreadsheet or SQL table.
+    # each dictionary from data list becomes a row in the DataFrame, with the keys as column names
+
+    #create an in-memory file-like object
     output = BytesIO()
-    df.to_csv(output, index=False)
-    output.seek(0)  # Move to the beginning of the BytesIO buffer
+    #NOTE This creates a binary stream in memory, which we'll use as a file-like object.
+    # BytesIO is part of Python's io module and allows us to work with bytes in memory as if it were a file on disk.
+    # This is useful because we don't need to create an actual file on the server's filesystem.
 
-    return send_file(output, mimetype='text/csv', as_attachment=True, download_name='transactions.csv')
+    # write the DataFrame to the in-memory file as CSV
+    df.to_csv(output, index=False) # index=False parameter tells pandas not to write the index of the DF as a column in the CSV
+    #NOTE This converts the DataFrame to CSV format and writes it in the output BytesIO object
+    # Instead of writing to a file on disk, we're writing to our in-memory output object.
 
-#TBD - EXPORT AS PDF (includes charts and transactions list)
+    output.seek(0)  # move to the beginning of the BytesIO buffer
+    #NOTE In file operations, there's a concept of a "file pointer" or "cursor."
+    # This is an internal marker that keeps track of where you are in the file.
+    # When you write to a file (or a file-like object like BytesIO), the pointer moves forward with each write operation.
+    # When you read from a file, you start reading from wherever the pointer currently is.
+    # This ensures that when Flask's send_file() function starts reading the data to send to the user, it begins from the start of our CSV data.
+
+    # create a file name that includes the month
+    filename = f'transactions_{year}_{month}.csv'
+
+    # send the CSV file to the user as a downloadable attachment with the new filename
+    #  Flask function used to send files to the client
+    return send_file(output, mimetype='text/csv', download_name=filename) #Multipurpose Internet Mail Extensions
+
+    #a way to identify the type of data being transmitted over the internet.
+    # It's a standard that helps applications and web browsers understand the content they are receiving.
+
+#TODO - EXPORT AS PDF (includes charts and transactions list)
