@@ -1,8 +1,8 @@
-"""Create database with USER
+"""Recreate final database
 
-Revision ID: b6f201b1e8b8
+Revision ID: b5847e2bc8b4
 Revises: 
-Create Date: 2025-02-23 23:04:00.708609
+Create Date: 2025-02-24 18:26:43.855299
 
 """
 from alembic import op
@@ -10,7 +10,7 @@ import sqlalchemy as sa
 
 
 # revision identifiers, used by Alembic.
-revision = 'b6f201b1e8b8'
+revision = 'b5847e2bc8b4'
 down_revision = None
 branch_labels = None
 depends_on = None
@@ -32,11 +32,11 @@ def upgrade():
     sa.Column('id', sa.Integer(), nullable=False),
     sa.Column('name', sa.String(length=50), nullable=False),
     sa.Column('description', sa.String(length=1000), nullable=True),
-    sa.Column('user_id', sa.Integer(), nullable=False),
+    sa.Column('user_id', sa.Integer(), nullable=True),
     sa.ForeignKeyConstraint(['user_id'], ['user.user_id'], ),
     sa.PrimaryKeyConstraint('id'),
     sa.UniqueConstraint('id'),
-    sa.UniqueConstraint('name')
+    sa.UniqueConstraint('name', 'user_id', name='uix_name_user_id')
     )
     op.create_table('budgets',
     sa.Column('id', sa.Integer(), nullable=False),
@@ -48,7 +48,7 @@ def upgrade():
     sa.ForeignKeyConstraint(['user_id'], ['user.user_id'], ),
     sa.PrimaryKeyConstraint('id'),
     sa.UniqueConstraint('id'),
-    sa.UniqueConstraint('name')
+    sa.UniqueConstraint('name', 'user_id', name='uix_name_user_id')
     )
     op.create_table('goals',
     sa.Column('id', sa.Integer(), nullable=False),
@@ -62,7 +62,7 @@ def upgrade():
     sa.ForeignKeyConstraint(['user_id'], ['user.user_id'], ),
     sa.PrimaryKeyConstraint('id'),
     sa.UniqueConstraint('id'),
-    sa.UniqueConstraint('name')
+    sa.UniqueConstraint('name', 'user_id', name='uix_name_user_id')
     )
     op.create_table('transactions',
     sa.Column('id', sa.Integer(), nullable=False),
