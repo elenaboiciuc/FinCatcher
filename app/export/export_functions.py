@@ -4,7 +4,6 @@ from datetime import datetime
 from dateutil.relativedelta import relativedelta
 import pandas as pd
 from flask_login import current_user
-
 from app.main.models import Transactions
 
 

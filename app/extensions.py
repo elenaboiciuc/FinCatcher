@@ -74,8 +74,7 @@ financial_quotes = {
     18: "Debt and ignorance don’t mix. ⚠️",
     19: "Only save what’s extra. ✨",
     20: "Start small, grow your savings. 🌿",
-    21: "Shop smart, save big. 🛒",
-    22: "Save for snow. ❄️",
+    21: "Shop smart, save big. 🛒"
 }
 
 

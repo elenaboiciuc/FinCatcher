@@ -1,10 +1,10 @@
 
 from flask import render_template, redirect, url_for, request, flash
 from flask_login import login_required, current_user
-from sqlalchemy import or_
 from sqlalchemy.exc import IntegrityError
 from app.categories import categories
 from app.extensions import category_icons, db, category_gifs
+from app.main.helpers import get_categories
 from app.main.models import Categories
 
 
@@ -31,9 +31,7 @@ def categories_page():
         return redirect(url_for('categories.categories_page'))
 
     # fetch all categories from the database
-    categories_list = Categories.query.filter(
-        or_(Categories.id <= 16, Categories.user_id == current_user.user_id)
-    ).all()
+    categories_list = get_categories()
 
     return render_template('show_categories.html',
                            categories=categories_list,
@@ -45,7 +43,7 @@ def categories_page():
 @login_required
 def delete_category(id):
     try:
-        # Attempt to add and commit the new category to the database
+        # attempt to add and commit the new category to the database
         db.session.delete(Categories.query.get_or_404(id))
         db.session.commit()
         flash('Category deleted successfully!', 'success')

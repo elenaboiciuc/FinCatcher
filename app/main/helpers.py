@@ -1,15 +1,22 @@
 import random
+from datetime import datetime, timedelta
 import pandas as pd
 import plotly.express as px
 from flask import flash
 from flask_login import current_user
-from sqlalchemy import or_, func
-
-from app.main.models import Transactions, Categories, Budgets
+from sqlalchemy import or_
+from app.extensions import db
+from app.main.models import Transactions, Categories, Budgets, Goals
 
 
 def get_random_quote(quotes):
     return quotes[random.choice(list(quotes.keys()))]
+
+def get_budgets():
+    return Budgets.query.filter_by(user_id=current_user.user_id).all()
+
+def get_transactions():
+    return Transactions.query.filter_by(user_id=current_user.user_id).all()
 
 def get_categories():
     """Fetch all relevant categories for the current user."""
@@ -17,43 +24,85 @@ def get_categories():
         or_(Categories.id <= 16, Categories.user_id == current_user.user_id)
     ).all()
 
-def check_goal_notifications(goal,category_icons):
-    gif_url = category_icons[goal.category_id if goal.category_id <= 16 else 17]
+def update_budget_progress_and_notify(user_id, category_icons):
+    """fetch budgets for the current user, update their spent amount based on transactions,
+    then check for notifications to flash messages if certain thresholds are reached."""
 
-    """Check the progress of a goal and send notifications if certain thresholds are reached."""
-    if goal.current_amount >= goal.target_amount:
-        flash(f'<img src="{gif_url}" alt="Category gif" style="width:24px; height:24px;"> Congratulations! You have reached your goal of {goal.name}!', 'success')
-    elif (goal.current_amount / goal.target_amount) >= 0.80:
-        flash(f'<img src="{gif_url}" alt="Category gif" style="width:24px; height:24px;"> Great job! You have reached 80% of your goal for {goal.name}. Keep it up!', 'info')
-    elif (goal.current_amount / goal.target_amount) >= 0.50:
-        flash(f'<img src="{gif_url}" alt="Category gif" style="width:24px; height:24px;"> Nice work! You have reached 50% of your goal for {goal.name}.', 'info')
+    # Calculate the start and end of the month for fetching relevant transactions
+    current_date = datetime.now()
+    start_of_month = current_date.replace(day=1)
+    end_of_month = (start_of_month + timedelta(days=32)).replace(day=1) - timedelta(days=1)
 
-def get_budgets_with_spent(session, start_date=None, end_date=None):
-    """fetch budgets along with spent amounts for the current user within the specified date range"""
+    # Fetch transactions for the current user within the month's timeframe
+    transactions = Transactions.query.filter(
+        Transactions.user_id == user_id,
+        Transactions.date >= start_of_month,
+        Transactions.date <= end_of_month
+    ).all()
 
-    # set filters for the date range
-    date_filter = (Transactions.date >= start_date) & (
-                Transactions.date <= end_date) if start_date and end_date else True
+    # Fetch budgets for the current user
+    budgets_list = Budgets.query.filter_by(user_id=user_id).all()
 
-    budgets_list = (session.query(Budgets, func.coalesce(func.sum(Transactions.amount), 0).label('spent'))
-                    .outerjoin(Transactions, (Budgets.category_id == Transactions.category_id) &
-                               (Transactions.user_id == current_user.user_id) & date_filter)
-                    .filter(Budgets.user_id == current_user.user_id)
-                    .group_by(Budgets)
-                    .all())
+    # Update spent amount for budgets based on transactions and check for notifications
+    for budget in budgets_list:
+        spent_amount = sum(transaction.amount for transaction in transactions
+                           if transaction.category_id == budget.category_id)
 
-    return budgets_list
+        # Update the budget's spent amount
+        budget.spent = spent_amount
+        budget.calculate_spent_percentage()  # Calculate the spent percentage based on new spent value
+        db.session.add(budget)
 
-def notify_budget_status(budget, category_icons):
-    """ send notifications based on the budget spent percentage """
-    gif_url = category_icons[budget.category_id if budget.category_id <= 16 else 17]
+        # Check for notifications based on the updated spent amount
+        icon_url = category_icons[budget.category_id if budget.category_id <= 16 else 17]
+        if budget.spent >= budget.monthly_limit:
+            flash(
+                f'<img src="{icon_url}" alt="Category gif" style="width:24px; height:24px;"> You have reached your monthly budget limit for {budget.name}.',
+                'error')
+        elif (budget.spent / budget.monthly_limit) >= 0.80:
+            flash(
+                f'<img src="{icon_url}" alt="Category gif" style="width:24px; height:24px;"> Great job! You have spent 80% of your budget for {budget.name}. Keep an eye on your expenses!',
+                'info')
 
-    if budget.percent_spent >= 100:
-        flash(f'<img src="{gif_url}" alt="Category gif" style="width:24px; height:24px;"> You\'ve reached the limit for the budget "{budget.name}". Please review.', 'error')
-    elif budget.percent_spent >= 80:
-        flash(f'<img src="{gif_url}" alt="Category gif" style="width:24px; height:24px;"> You have spent {budget.percent_spent:.2f}% of your "{budget.name}" budget.', 'warning')
-    elif budget.percent_spent >= 50:
-        flash(f'<img src="{gif_url}" alt="Category gif" style="width:24px; height:24px;"> You have spent {budget.percent_spent:.2f}% of your "{budget.name}" budget.', 'warning')
+    db.session.commit()  # commit all budget updates
+
+def update_goal_progress_and_notify(user_id, category_icons):
+    """fetch goals for the current user and update their current amount based on transactions,
+    then check for notifications to flash messages if certain thresholds are reached."""
+
+    # Fetch transactions for the current user
+    transactions_all = Transactions.query.filter(Transactions.user_id == user_id).all()
+
+    # Fetch goals for the current user
+    goals_list = Goals.query.filter_by(user_id=user_id).all()
+
+    # Update current_amount for goals based on transactions and check for notifications
+    for goal in goals_list:
+        goal_current_amount = 0  # Initialize current amount counter for each goal
+        for transaction in transactions_all:
+            if goal.name.lower() in transaction.description.lower() and transaction.category_id == goal.category_id:
+                goal_current_amount += transaction.amount
+
+        # Update the goal's current amount
+        goal.current_amount = goal_current_amount
+        db.session.add(goal)  # Prepare to update this goal in the database
+
+        # Check for notifications based on the updated current amount
+        icon_url = category_icons[goal.category_id if goal.category_id <= 16 else 17]
+        if goal.current_amount >= goal.target_amount:
+            flash(
+                f'<img src="{icon_url}" alt="Category gif" style="width:24px; height:24px;"> Congratulations! You have reached your goal of {goal.name}!',
+                'success')
+        elif (goal.current_amount / goal.target_amount) >= 0.80:
+            flash(
+                f'<img src="{icon_url}" alt="Category gif" style="width:24px; height:24px;"> Great job! You have reached 80% of your goal for {goal.name}. Keep it up!',
+                'info')
+        elif (goal.current_amount / goal.target_amount) >= 0.50:
+            flash(
+                f'<img src="{icon_url}" alt="Category gif" style="width:24px; height:24px;"> Nice work! You have reached 50% of your goal for {goal.name}.',
+                'info')
+
+    db.session.commit()  # Commit all goal updates
 
 def get_transactions_by_date(start_date):
     return Transactions.query.filter(Transactions.date >= start_date, Transactions.user_id == current_user.user_id)
@@ -99,7 +148,6 @@ def create_pie_chart(transactions):
                   title='Top 5 Category Distribution for Expenses',
                   color_discrete_sequence=px.colors.sequential.Sunset_r
                   ).to_html(full_html=False)
-
 
 def create_donut_chart(transactions, title):
     # Prepare a DataFrame for transactions and group by 'Type'

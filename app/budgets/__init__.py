@@ -1,8 +1,8 @@
 from flask import Blueprint
 
-# Create the blueprint instance
+# Create the blueprint
 budgets = Blueprint('budgets', __name__, template_folder='templates')
 
-# Import routes at the end to avoid circular imports
+# import routes at the end to avoid circular imports
 from app.budgets import routes
 

@@ -1,12 +1,11 @@
-from datetime import date, datetime
+from datetime import date
 from flask import request, flash, redirect, url_for, render_template
 from flask_login import login_required, current_user
 from sqlalchemy.exc import IntegrityError
 from app.goals import goals
 from app.extensions import db, category_gifs, category_icons
-from app.main.helpers import get_categories, check_goal_notifications
-from app.main.models import Goals, Categories, Transactions
-
+from app.main.helpers import get_categories, update_goal_progress_and_notify
+from app.main.models import Goals
 
 @goals.route('/goals', methods=['GET', 'POST'])
 @login_required
@@ -24,29 +23,24 @@ def goals_page():
             db.session.add(new_goal)
             db.session.commit()
             flash('New goal created successfully!', 'success')
+            flash(
+                'Only transactions that include the goal name in the description will be considered, so please set the descriptions carefully.',
+                'info'
+            )
+            # Update current amounts and check notifications for all goals after the new goal is created
+            update_goal_progress_and_notify(current_user.user_id, category_icons)
         except IntegrityError:
             db.session.rollback()
             flash('Goal name already exists. Please choose a different name.', 'error')
 
         return redirect(url_for('goals.goals_page'))
 
+    # Fetch goals and categories for the current user
     goals_list = Goals.query.filter_by(user_id=current_user.user_id).all()
     categories_list = get_categories()
-    transactions = Transactions.query.filter_by(user_id=current_user.user_id).all()
 
-    for goal in goals_list:
-        goal_current_amount = 0
-        for transaction in transactions:
-            if goal.name.lower() in transaction.description.lower() and transaction.category_id == goal.category_id:
-                goal_current_amount += transaction.amount
-
-        goal.current_amount = goal_current_amount
-        db.session.add(goal)
-
-        # Check notifications each time the goal is updated
-        check_goal_notifications(goal, category_icons)
-
-    db.session.commit()
+    # Update current amounts and check notifications for all goals
+    update_goal_progress_and_notify(current_user.user_id, category_icons)
 
     return render_template('show_goals.html', goals=goals_list,
                            categories=categories_list, category_gifs=category_gifs, category_icons=category_icons,
@@ -60,6 +54,7 @@ def goals_page():
 def edit_goal(id):
     goal = Goals.query.filter_by(id=id, user_id=current_user.user_id).first_or_404()
     categories_list = get_categories()
+
     if request.method == 'POST':
         try:
             goal.name = request.form['name']
@@ -72,9 +67,6 @@ def edit_goal(id):
         except IntegrityError:
             db.session.rollback()
             flash('There was an error updating the goal. Please try again.', 'error')
-
-    # Fetch categories for the dropdown
-    categories_list = get_categories()
 
     return render_template('edit_goal.html', goal=goal, categories=categories_list, page_title='Edit Goal')
 
