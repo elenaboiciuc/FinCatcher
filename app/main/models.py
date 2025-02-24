@@ -1,3 +1,4 @@
+from sqlalchemy import UniqueConstraint
 from app.extensions import db, login_manager
 from flask_login import UserMixin
 
@@ -33,13 +34,12 @@ class Transactions(db.Model):
     category_id = db.Column(db.Integer, db.ForeignKey('categories.id'), nullable=False)  # references Categories table
     user_id = db.Column(db.Integer, db.ForeignKey('user.user_id'), nullable=False)  # link to User
 
-
     # relationship to table categories
     category = db.relationship('Categories', backref=db.backref('transactions', lazy=True))
 
 class Categories(db.Model):
     id = db.Column(db.Integer, primary_key=True, unique=True, nullable=False)
-    name = db.Column(db.String(50), unique=True, nullable=False)
+    name = db.Column(db.String(50), nullable=False)
     description = db.Column(db.String(1000), nullable=True)
 
     # foreign key
@@ -49,18 +49,28 @@ class Categories(db.Model):
     budgets = db.relationship('Budgets', backref='category', lazy=True)
     goals = db.relationship('Goals', backref='category', lazy=True)
 
+    # unique constraint on the combination of name and user_id
+    __table_args__ = (UniqueConstraint('name', 'user_id', name='uix_name_user_id'),)
+
 class Budgets(db.Model):
     id = db.Column(db.Integer, primary_key=True, unique=True, nullable=False)
-    name = db.Column(db.String(50), unique=True, nullable=False)
+    name = db.Column(db.String(50), nullable=False)
     monthly_limit = db.Column(db.Float, nullable=False)
 
     # foreign keys
     category_id = db.Column(db.Integer, db.ForeignKey('categories.id'), nullable=False)  # references Categories table
     user_id = db.Column(db.Integer, db.ForeignKey('user.user_id'), nullable=False)  # link to User
 
+    # unique constraint on the combination of name and user_id
+    __table_args__ = (UniqueConstraint('name', 'user_id', name='uix_name_user_id'),)
+
+    def calculate_percent_spent(self, spent):
+        """ calculate the percentage spent based on the monthly limit """
+        return (spent / self.monthly_limit * 100) if self.monthly_limit > 0 else 0
+
 class Goals(db.Model):
     id = db.Column(db.Integer, primary_key=True, unique=True, nullable=False)
-    name = db.Column(db.String(50), unique=True, nullable=False)
+    name = db.Column(db.String(50), nullable=False)
     target_amount = db.Column(db.Float, nullable=False)
     target_date = db.Column(db.Date, nullable=False)
     current_amount = db.Column(db.Float, nullable=False)
@@ -68,5 +78,8 @@ class Goals(db.Model):
     # foreign keys
     category_id = db.Column(db.Integer, db.ForeignKey('categories.id'), nullable=False)  # references Categories table
     user_id = db.Column(db.Integer, db.ForeignKey('user.user_id'), nullable=False)  # link to User
+
+    # unique constraint on the combination of name and user_id
+    __table_args__ = (UniqueConstraint('name', 'user_id', name='uix_name_user_id'),)
 
 

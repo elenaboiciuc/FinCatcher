@@ -23,31 +23,36 @@
 {% endwith %}
 
 <div style="padding: 20px; background-color: #FFFFFF;">
-    <h2>Edit Budget</h2>
-    <form action="{{ url_for('budgets.edit_budget', id=budget.id) }}" method="POST"
+    <h2>Edit Goal</h2>
+    <form action="{{ url_for('goals.edit_goal', id=goal.id) }}" method="POST"
           style="background-color: #E6E6FA; padding: 10px; box-shadow: 2px 2px 5px rgba(0,0,0,0.1); display: flex; align-items: center; gap: 10px;">
 
         <div style="display: flex; flex-direction: column; align-items: flex-start; margin-right: 10px;">
-            <label for="name" style="margin-bottom: 2px;">Name:</label>
-            <input type="text" id="name" name="name" value="{{ budget.name }}" style="margin-bottom: 10px; width: 200px;" required>
+            <label for="name" style="margin-bottom: 2px;">Goal Name:</label>
+            <input type="text" id="name" name="name" value="{{ goal.name }}" style="margin-bottom: 10px; width: 200px;" required>
         </div>
 
         <div style="display: flex; flex-direction: column; align-items: flex-start; margin-right: 10px;">
-            <label for="monthly_limit" style="margin-bottom: 2px;">Monthly Limit:</label>
-            <input type="number" id="monthly_limit" name="monthly_limit" value="{{ budget.monthly_limit }}" style="margin-bottom: 10px; width: 200px;" required>
+            <label for="target_amount" style="margin-bottom: 2px;">Target Amount:</label>
+            <input type="number" id="target_amount" name="target_amount" value="{{ goal.target_amount }}" style="margin-bottom: 10px; width: 200px;" required>
+        </div>
+
+        <div style="display: flex; flex-direction: column; align-items: flex-start; margin-right: 10px;">
+            <label for="target_date" style="margin-bottom: 2px;">Target Date:</label>
+            <input type="date" id="target_date" name="target_date" value="{{ goal.target_date }}" style="margin-bottom: 10px; width: 200px;" required>
         </div>
 
         <div style="display: flex; flex-direction: column; align-items: flex-start; margin-right: 10px;">
             <label for="category" style="margin-bottom: 2px;">Category:</label>
             <select id="category" name="category_id" style="margin-bottom: 10px; width: 200px;" required>
                 {% for category in categories %}
-                    <option value="{{ category.id }}" {% if category.id == budget.category_id %} selected {% endif %}>{{ category.name }}</option>
+                    <option value="{{ category.id }}" {% if category.id == goal.category_id %} selected {% endif %}>{{ category.name }}</option>
                 {% endfor %}
             </select>
         </div>
 
-        <button type="submit" style="background-color: #9370DB; color: white; padding: 5px 10px; border: none; cursor: pointer;">Update Budget</button>
-        <button type="button" onclick="window.location.href='{{ url_for('budgets.budgets_page') }}'" style="background-color: #DC143C; color: white; padding: 5px 10px; border: none; cursor: pointer;">Cancel</button>
+        <button type="submit" style="background-color: #9370DB; color: white; padding: 5px 10px; border: none; cursor: pointer;">Update Goal</button>
+        <button type="button" onclick="window.location.href='{{ url_for('goals.goals_page') }}'" style="background-color: #DC143C; color: white; padding: 5px 10px; border: none; cursor: pointer;">Cancel</button>
     </form>
 </div>
 

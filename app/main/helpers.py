@@ -1,12 +1,59 @@
 import random
 import pandas as pd
 import plotly.express as px
+from flask import flash
 from flask_login import current_user
+from sqlalchemy import or_, func
 
-from app.main.models import Transactions
+from app.main.models import Transactions, Categories, Budgets
+
 
 def get_random_quote(quotes):
     return quotes[random.choice(list(quotes.keys()))]
+
+def get_categories():
+    """Fetch all relevant categories for the current user."""
+    return Categories.query.filter(
+        or_(Categories.id <= 16, Categories.user_id == current_user.user_id)
+    ).all()
+
+def check_goal_notifications(goal,category_icons):
+    gif_url = category_icons[goal.category_id if goal.category_id <= 16 else 17]
+
+    """Check the progress of a goal and send notifications if certain thresholds are reached."""
+    if goal.current_amount >= goal.target_amount:
+        flash(f'<img src="{gif_url}" alt="Category gif" style="width:24px; height:24px;"> Congratulations! You have reached your goal of {goal.name}!', 'success')
+    elif (goal.current_amount / goal.target_amount) >= 0.80:
+        flash(f'<img src="{gif_url}" alt="Category gif" style="width:24px; height:24px;"> Great job! You have reached 80% of your goal for {goal.name}. Keep it up!', 'info')
+    elif (goal.current_amount / goal.target_amount) >= 0.50:
+        flash(f'<img src="{gif_url}" alt="Category gif" style="width:24px; height:24px;"> Nice work! You have reached 50% of your goal for {goal.name}.', 'info')
+
+def get_budgets_with_spent(session, start_date=None, end_date=None):
+    """fetch budgets along with spent amounts for the current user within the specified date range"""
+
+    # set filters for the date range
+    date_filter = (Transactions.date >= start_date) & (
+                Transactions.date <= end_date) if start_date and end_date else True
+
+    budgets_list = (session.query(Budgets, func.coalesce(func.sum(Transactions.amount), 0).label('spent'))
+                    .outerjoin(Transactions, (Budgets.category_id == Transactions.category_id) &
+                               (Transactions.user_id == current_user.user_id) & date_filter)
+                    .filter(Budgets.user_id == current_user.user_id)
+                    .group_by(Budgets)
+                    .all())
+
+    return budgets_list
+
+def notify_budget_status(budget, category_icons):
+    """ send notifications based on the budget spent percentage """
+    gif_url = category_icons[budget.category_id if budget.category_id <= 16 else 17]
+
+    if budget.percent_spent >= 100:
+        flash(f'<img src="{gif_url}" alt="Category gif" style="width:24px; height:24px;"> You\'ve reached the limit for the budget "{budget.name}". Please review.', 'error')
+    elif budget.percent_spent >= 80:
+        flash(f'<img src="{gif_url}" alt="Category gif" style="width:24px; height:24px;"> You have spent {budget.percent_spent:.2f}% of your "{budget.name}" budget.', 'warning')
+    elif budget.percent_spent >= 50:
+        flash(f'<img src="{gif_url}" alt="Category gif" style="width:24px; height:24px;"> You have spent {budget.percent_spent:.2f}% of your "{budget.name}" budget.', 'warning')
 
 def get_transactions_by_date(start_date):
     return Transactions.query.filter(Transactions.date >= start_date, Transactions.user_id == current_user.user_id)

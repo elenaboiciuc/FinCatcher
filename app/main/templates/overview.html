@@ -1,6 +1,28 @@
 {% extends "layout.html" %}
 
 {% block content %}
+
+{% with messages = get_flashed_messages(with_categories=true) %}
+    {% if messages %}
+        <div>
+            {% for category, message in messages %}
+                <div style="position: relative; margin-bottom: 15px; padding: 10px; border-radius: 4px; width: 90%; margin: 10px auto; text-align: center; border: 1px solid transparent;
+                            {% if category == 'success' %}
+                                background-color: #dff0d8; border-color: #d0e9c6; color: #3c763d;
+                            {% elif category == 'error' %}
+                                background-color: #f2dede; border-color: #ebccd1; color: #a94442;
+                            {% else %}
+                                background-color: #d9edf7; border-color: #bcdff1; color: #31708f;
+                            {% endif %}
+                     class="flash-message">
+                    <button onclick="this.parentElement.style.display='none';" style="position: absolute; top: 5px; right: 10px; background: none; border: none; font-size: 16px; color: inherit; cursor: pointer;">&times;</button>
+                    {{ message | safe }}  <!-- Use the safe filter to render HTML -->
+                </div>
+            {% endfor %}
+        </div>
+    {% endif %}
+{% endwith %}
+
 <div style="display: flex; justify-content: space-around; flex-wrap: wrap; margin-top: 20px;">
     <div style="flex: 0 0 25%; max-width: 250px; margin: 10px; box-shadow: 2px 2px 5px rgba(0,0,0,0.1); background-color: #FFFFFF; display: flex; flex-direction: column; justify-content: center; align-items: center; height: 250px;">
         <div style="font-size: 18px; color: #333333;">
