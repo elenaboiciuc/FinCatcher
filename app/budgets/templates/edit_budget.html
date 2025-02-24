@@ -12,15 +12,16 @@
                                 background-color: #f2dede; border-color: #ebccd1; color: #a94442;
                             {% else %}
                                 background-color: #d9edf7; border-color: #bcdff1; color: #31708f;
-                            {% endif %}"
+                            {% endif %}
                      class="flash-message">
                     <button onclick="this.parentElement.style.display='none';" style="position: absolute; top: 5px; right: 10px; background: none; border: none; font-size: 16px; color: inherit; cursor: pointer;">&times;</button>
-                    {{ message }}
+                    {{ message | safe }}
                 </div>
             {% endfor %}
         </div>
     {% endif %}
 {% endwith %}
+
 
 <div style="padding: 20px; background-color: #FFFFFF;">
     <h2>Edit Budget</h2>

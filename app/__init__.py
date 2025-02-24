@@ -24,7 +24,7 @@ def create_app():
         'SQLALCHEMY_TRACK_MODIFICATIONS'] = False  # disable the feature to track modifications, which avoids a warning
     app.secret_key = "1234"  # key for data decryption
 
-    # Initialize extensions
+    # initialize extensions
     db.init_app(app)  # bind the SQLAlchemy instance to the Flask app
     migrate.init_app(app, db)  # bind the Migrate instance to the Flask app and the database instance
 

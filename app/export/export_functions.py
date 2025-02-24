@@ -36,35 +36,33 @@ def export_to_csv(month):
 
     # convert the data to a pandas DataFrame
     df = pd.DataFrame(data)
-    #NOTE A DataFrame is a 2-dimensional labeled data structure in pandas, similar to a spreadsheet or SQL table.
+    # DataFrame = 2-dimensional labeled data structure in pandas, similar to a spreadsheet or SQL table.
     # each dictionary from data list becomes a row in the DataFrame, with the keys as column names
 
     #create an in-memory file-like object
     output = BytesIO()
-    #NOTE This creates a binary stream in memory, which we'll use as a file-like object.
-    # BytesIO is part of Python's io module and allows us to work with bytes in memory as if it were a file on disk.
-    # This is useful because we don't need to create an actual file on the server's filesystem.
+    # this creates a binary stream in memory, will be used as a file-like object
+    # BytesIO is part of Python's io module and allows us to work with bytes in memory as if it were a file on disk
+    # this is useful because we don't need to create an actual file on the server's filesystem
 
-    # write the DataFrame to the in-memory file as CSV
+    # converts the DataFrame to CSV format and writes it in the output BytesIO object
     df.to_csv(output, index=False) # index=False parameter tells pandas not to write the index of the DF as a column in the CSV
-    #NOTE This converts the DataFrame to CSV format and writes it in the output BytesIO object
-    # Instead of writing to a file on disk, we're writing to our in-memory output object.
+
 
     output.seek(0)  # move to the beginning of the BytesIO buffer
-    #NOTE In file operations, there's a concept of a "file pointer" or "cursor."
-    # This is an internal marker that keeps track of where you are in the file.
-    # When you write to a file (or a file-like object like BytesIO), the pointer moves forward with each write operation.
-    # When you read from a file, you start reading from wherever the pointer currently is.
-    # This ensures that when Flask's send_file() function starts reading the data to send to the user, it begins from the start of our CSV data.
+    # in file operations, there's a concept of a "file pointer" or "cursor."
+    # this is an internal marker that keeps track of where you are in the file
+    # when you write to a file (or a file-like object like BytesIO), the pointer moves forward with each write operation
+    # when you read from a file, you start reading from wherever the pointer currently is
+    # this ensures that when Flask's send_file() function starts reading the data to send to the user, it begins from the start of our CSV data
 
     # create a file name that includes the month and user
     filename = f'transactions_{current_user.user_name}_{year}_{month}.csv'
 
     # send the CSV file to the user as a downloadable attachment with the new filename
-    #  Flask function used to send files to the client
     return send_file(output, mimetype='text/csv', download_name=filename) #Multipurpose Internet Mail Extensions
 
-    #a way to identify the type of data being transmitted over the internet.
-    # It's a standard that helps applications and web browsers understand the content they are receiving.
+    # mime - a way to identify the type of data being transmitted over the internet
+    # it's a standard that helps applications and web browsers understand the content they are receiving
 
 #TODO - EXPORT AS PDF (includes charts and transactions list)

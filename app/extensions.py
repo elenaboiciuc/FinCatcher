@@ -5,14 +5,14 @@ from flask_login import LoginManager # for managing user sessions
 
 
 # declaration of DB and Migrate
-db = SQLAlchemy()
-migrate = Migrate()
+db = SQLAlchemy() # create an instance of SQLAlchemy for database interaction
+migrate = Migrate() # create an instance of Migrate for database migrations
 
-# declaration of Bcrypt and LoginManager
-bcrypt = Bcrypt() #  pass management for a registered user
+# declaration of Bcrypt and LoginManager for handling user authentication
+bcrypt = Bcrypt() # create an instance of Bcrypt for password management
 login_manager = LoginManager()  # this will handle the user login/logout operations
 
-
+# mapping of category IDs to respective icon image paths
 category_icons = {
     1: 'static/images/food.png',
     2: 'static/images/utilities.png',
@@ -30,9 +30,10 @@ category_icons = {
     14: 'static/images/shopping.png',
     15: 'static/images/pets.png',
     16: 'static/images/others.png',
-    17: 'static/images/new_category.png'
+    17: 'static/images/new_category.png' # placeholder for a new category icon
 }
 
+# mapping of category IDs to respective GIF image paths for dynamic visuals
 category_gifs = {
     1: 'static/images/food.gif',
     2: 'static/images/utilities.gif',
@@ -50,9 +51,10 @@ category_gifs = {
     14: 'static/images/shopping.gif',
     15: 'static/images/pets.gif',
     16: 'static/images/others.gif',
-    17: 'static/images/new_category.gif'
+    17: 'static/images/new_category.gif' # placeholder for a new category gif
 }
 
+# collection of financial quotes to inspire users towards better financial management
 financial_quotes = {
     1: "A penny saved is a penny earned. 💰",
     2: "Save first, spend what’s left. 💸",
@@ -75,6 +77,7 @@ financial_quotes = {
     19: "Only save what’s extra. ✨",
     20: "Start small, grow your savings. 🌿",
     21: "Shop smart, save big. 🛒"
+    # more quotes can be added to motivate users in managing their finances
 }
 
 

@@ -2,6 +2,9 @@ from sqlalchemy import UniqueConstraint
 from app.extensions import db, login_manager
 from flask_login import UserMixin
 
+# UserMixin is a class provided by the Flask-Login extension that helps you implement user session management
+# It’s used as a base class for your user model to provide the necessary methods and attributes
+# required by Flask-Login for handling authenticated users.
 
 class User(db.Model, UserMixin):
     user_id = db.Column(db.Integer, primary_key=True, unique=True, nullable=False)
