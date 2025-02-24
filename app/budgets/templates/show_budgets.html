@@ -12,10 +12,10 @@
                                 background-color: #f2dede; border-color: #ebccd1; color: #a94442;
                             {% else %}
                                 background-color: #d9edf7; border-color: #bcdff1; color: #31708f;
-                            {% endif %}"
+                            {% endif %}
                      class="flash-message">
                     <button onclick="this.parentElement.style.display='none';" style="position: absolute; top: 5px; right: 10px; background: none; border: none; font-size: 16px; color: inherit; cursor: pointer;">&times;</button>
-                    {{ message }}
+                    {{ message | safe }}  <!-- Use the safe filter to render HTML -->
                 </div>
             {% endfor %}
         </div>
@@ -29,7 +29,7 @@
               style="background-color: #E6E6FA; padding: 10px; box-shadow: 2px 2px 5px rgba(0,0,0,0.1); display: flex; align-items: center; gap: 10px;">
 
             <div style="display: flex; flex-direction: column; align-items: flex-start; margin-right: 10px;">
-                <label for="name" style="margin-bottom: 2px;">Name:</label>
+                <label for="name" style="margin-bottom: 2px;">Budget name:</label>
                 <input type="text" id="name" name="name" style="margin-bottom: 10px; width: 200px;">
             </div>
 
@@ -54,8 +54,9 @@
     <!-- Budgets List -->
     <div id="budgets-list" style="padding: 15px; box-shadow: 2px 2px 5px rgba(0,0,0,0.1); background-color: #FFFFFF;">
         <table style="width: 100%; border-collapse: collapse; text-align: left; font-size: 14px; color: #333333;">
-            <thead style="background-color: #E6E6FA; color: #DE3163; font-size: 18px;">
+            <thead style="background-color: #E6E6FA; color: #DE3163; font-size: 15px;">
                 <tr>
+                    <th style="padding: 10px; border: 1px solid #DDD;"></th> <!-- For category icon -->
                     <th style="padding: 10px; border: 1px solid #DDD;">Name</th>
                     <th style="padding: 10px; border: 1px solid #DDD;">Monthly Limit</th>
                     <th style="padding: 10px; border: 1px solid #DDD;">Category</th>
@@ -67,43 +68,36 @@
             </thead>
             <tbody>
                 {% for budget, spent in budgets %}
-                <tr style="background-color: {% if loop.index0 % 2 == 0 %} #FFFFFF {% else %} #F5F5F5 {% endif %};">
+                <tr style="background-color: #FFFFFF;">
+                    <td style="padding: 0; border: 1px solid #DDD; text-align: center;">
+                        <img src="{{ category_gifs[budget.category_id if budget.category_id <= 16 else 17] }}" alt="Category gif" style="width:24px; height:24px;">
+                    </td>
                     <td style="padding: 10px; border: 1px solid #DDD;">{{ budget.name }}</td>
-                    <td style="padding: 10px; border: 1px solid #DDD;">{{ budget.monthly_limit }}</td>
+                    <td style="padding: 10px; border: 1px solid #DDD;">{{ "%.0f"|format(budget.monthly_limit) if budget.monthly_limit.is_integer() else "%.2f"|format(budget.monthly_limit) }}</td>
                     <td style="padding: 10px; border: 1px solid #DDD;">{{ budget.category.name }}</td>
-                    <td style="padding: 10px; border: 1px solid #DDD;">{{ spent }}</td>
+                    <td style="padding: 10px; border: 1px solid #DDD;">{{ "%.0f"|format(spent) if spent.is_integer() else "%.2f"|format(spent) }}</td>
                     <td style="padding: 10px; border: 1px solid #DDD;">
-                        {% set percent_spent = (spent / budget.monthly_limit * 100) if budget.monthly_limit > 0 else 0 %}
                         <span style="color:
-                            {% if percent_spent > 70 %} #a94442 {% elif percent_spent > 30 %} #8a6d3b {% else %} #3c763d {% endif %};
-                            font-weight: bold;">
-                            {{ percent_spent | round }}%
+                            {% if budget.percent_spent > 70 %} #a94442 {% elif budget.percent_spent > 30 %} #8a6d3b {% else %} #3c763d {% endif %}; font-weight: bold;">
+                            {{ budget.percent_spent | round }}%
                         </span>
                     </td>
-                    <td style="padding: 10px; border: 1px solid #DDD;">
+                    <td style="padding: 0; border: 1px solid #DDD; text-align: center;">
                         <!-- EDIT ACTION -->
                         <a href="{{ url_for('budgets.edit_budget', id=budget.id) }}" class="edit-btn" style="color: #4B0082;">
                             <i class="fa-regular fa-pen-to-square"></i>
                         </a>
                     </td>
-                    <td style="padding: 10px; border: 1px solid #DDD;">
-                        <div style="display: flex; justify-content: center; align-items: center; gap: 0;">
-                            <!-- DELETE ACTION -->
-                            <a href="{{ url_for('budgets.delete_budget', id=budget.id) }}" class="delete-btn" onclick="confirmDelete(event, {{ budget.id }});">
+                    <td style="padding: 0; border: 1px solid #DDD; text-align: center;">
+                            <div style="display: flex; justify-content: center; align-items: center; gap: 0;">
+                                <!-- DELETE ACTION -->
+                            <a href="{{ url_for('budgets.delete_budget', id=budget.id) }}" class="delete-btn" style="display: flex; justify-content: center; align-items: center; width: 24px; height: 24px; color: #4B0082;" onclick="confirmDelete(event, {{ budget.id }});">
                                 <i class="fas fa-trash-alt"></i>
                             </a>
                             <form id="delete-form-{{ budget.id }}" action="{{ url_for('budgets.delete_budget', id=budget.id) }}" method="POST" style="display: none;">
                                 <input type="hidden" name="_method" value="DELETE">
                             </form>
                         </div>
-                        <script>
-                            function confirmDelete(event, budgetId) {
-                                event.preventDefault();
-                                if (confirm("Are you sure you want to delete this budget?")) {
-                                    document.getElementById('delete-form-' + budgetId).submit();
-                                }
-                            }
-                        </script>
                     </td>
                 </tr>
                 {% endfor %}

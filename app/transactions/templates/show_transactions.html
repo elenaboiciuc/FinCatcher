@@ -136,9 +136,6 @@
                             <a href="{{ url_for('transactions.edit_transaction', id=transaction.id) }}" class="edit-btn" style="color: #4B0082;">
                                 <i class="fa-regular fa-pen-to-square"></i>
                             </a>
-                            <form id="edit-form-{{ transaction.id }}" action="{{ url_for('transactions.edit_transaction', id=transaction.id) }}" method="POST" style="display: none;">
-                                <input type="hidden" name="_method" value="DELETE">
-                            </form>
                         </td>
                         <td style="padding: 0; border: 1px solid #DDD; text-align: center;">
                             <div style="display: flex; justify-content: center; align-items: center; gap: 0;">
