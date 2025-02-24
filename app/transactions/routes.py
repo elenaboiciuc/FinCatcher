@@ -1,4 +1,6 @@
 from flask import render_template, request, redirect, url_for, flash
+from flask_login import login_required, current_user
+
 from app.transactions import transactions
 from app.extensions import db, category_icons
 from app.main.models import Transactions, Categories
@@ -7,6 +9,7 @@ from dateutil.relativedelta import relativedelta
 
 # Route for displaying and managing transactions
 @transactions.route('/transactions', methods=['GET', 'POST'])
+@login_required
 def transactions_page():
     if request.method == 'POST':
         # Create a new transaction from form data
@@ -15,7 +18,8 @@ def transactions_page():
             amount=request.form['amount'],
             category_id=request.form['category_id'],
             description=request.form['description'],
-            type=request.form['type']
+            type=request.form['type'],
+            user_id=current_user.user_id
         )
         # Add and commit the new transaction to the database
         db.session.add(new_transaction)
@@ -33,8 +37,8 @@ def transactions_page():
     new_date = date(year, month, 1) + relativedelta(months=change_month)
     filter_month = f'{new_date.year}-{new_date.month:02}'
 
-    # Retrieve transactions based on filters applied
-    query = Transactions.query.join(Categories)
+    # Retrieve transactions based on filters applied and user_id
+    query = Transactions.query.join(Categories).filter(Transactions.user_id == current_user.user_id)
     query = apply_filters(query, filter_month, request.args.get('filter_category'), request.args.get('filter_type'))
 
     # Render the transactions page template with appropriate context
@@ -83,6 +87,7 @@ def delete_transaction(id):
 
 # Route for editing a transaction
 @transactions.route('/transactions/edit/<int:id>', methods=['GET', 'POST'])
+@login_required
 def edit_transaction(id):
     transaction = Transactions.query.get_or_404(id)
     if request.method == 'POST':
