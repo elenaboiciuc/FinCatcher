@@ -3,8 +3,14 @@
 {% block content %}
 <div style="display: flex; justify-content: space-around; flex-wrap: wrap; margin-top: 20px;">
     <div style="flex: 0 0 25%; max-width: 250px; margin: 10px; box-shadow: 2px 2px 5px rgba(0,0,0,0.1); background-color: #FFFFFF; display: flex; flex-direction: column; justify-content: center; align-items: center; height: 250px;">
-        <div style="font-size: 20px; color: #333333;">
-            Hello, Elena!
+        <div style="font-size: 18px; color: #333333;">
+            {% if now.hour < 12 %}
+                Good morning, {{ current_user.user_name }}!
+            {% elif now.hour < 18 %}
+                Good afternoon, {{ current_user.user_name }}!
+            {% else %}
+                Good evening, {{ current_user.user_name }}!
+            {% endif %}
         </div>
         <div style="font-size: 15px; color: #333333; margin-top: 10px; text-align: center; padding: 18px">
             {{ random_quote }}

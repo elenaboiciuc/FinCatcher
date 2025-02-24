@@ -1,6 +1,7 @@
 import random
 import pandas as pd
 import plotly.express as px
+from flask_login import current_user
 
 from app.main.models import Transactions
 
@@ -8,7 +9,7 @@ def get_random_quote(quotes):
     return quotes[random.choice(list(quotes.keys()))]
 
 def get_transactions_by_date(start_date):
-    return Transactions.query.filter(Transactions.date >= start_date).all()
+    return Transactions.query.filter(Transactions.date >= start_date, Transactions.user_id == current_user.user_id)
 
 def prepare_data(transactions):
     data = {'YearMonth': [],
@@ -43,7 +44,7 @@ def create_pie_chart(transactions):
     data = {'Category': [],
             'Amount': []}
     for t in transactions:
-        if t.type == 'expense':
+        if t.type == 'expense' and t.category_id != 10:
             data['Category'].append(t.category.name)
             data['Amount'].append(t.amount)
     df = pd.DataFrame(data).groupby('Category').sum().reset_index().nlargest(5, 'Amount')

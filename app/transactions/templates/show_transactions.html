@@ -123,7 +123,9 @@
                         <td style="padding: 10px; border: 1px solid #DDD;">{{ transaction.category.name }}</td>
                         <td style="padding: 10px; border: 1px solid #DDD;">{{ transaction.description }}</td>
                         <td style="padding: 0px; border: 1px solid #DDD; text-align: center;">
-                            {% if transaction.type == 'expense' %}
+                            {% if transaction.category_id == 10 %}
+                                <div style="width: 5px; height: 24px; background-color: #0077b6; display: inline-block;"></div> <!-- Blue line for savings -->
+                            {% elif transaction.type == 'expense' %}
                                 <div style="width: 5px; height: 24px; background-color: #DE3163; display: inline-block;"></div> <!-- Red line for expense -->
                             {% else %}
                                 <div style="width: 5px; height: 24px; background-color: #CCDF92; display: inline-block;"></div> <!-- Green line for income -->

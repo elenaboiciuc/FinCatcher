@@ -17,12 +17,17 @@
             padding: 10px 20px;
             display: flex;
             align-items: center;
+            justify-content: space-between;
             box-shadow: 0px 2px 5px rgba(0, 0, 0, 0.1);
-            position: fixed; /* Fix the header position */
-            top: 0; /* Align it to the top */
+            position: fixed;
+            top: 0;
             height: 35px;
-            width: 100%; /* Full width */
-            z-index: 1000; /* Ensure it stays above other elements */
+            width: 100%;
+            z-index: 1000;
+        }
+        .header-left {
+            display: flex;
+            align-items: center;
         }
         .header img {
             height: 50px;
@@ -39,6 +44,16 @@
             font-size: 16px;
             margin-left: 60px;
             color: #2c3e50;
+        }
+        .logout-btn {
+            text-decoration: none;
+            color: #2c3e50;
+            font-size: 14px;
+            padding: 5px 50px;
+            transition: color 0.3s;
+        }
+        .logout-btn:hover {
+            color:  #de3163;
         }
         .sidebar {
             width: 200px;
@@ -84,9 +99,12 @@
 </head>
 <body>
     <div class="header">
-        <img src="{{ url_for('static', filename='images/dreamcatcher.gif') }}" alt="Dream Catcher">
-        <h1>FinCatcher</h1>
-        <span class="page-title"><i class="{{ icon }}"></i> {{ page_title }}</span>
+        <div class="header-left">
+            <img src="{{ url_for('static', filename='images/dreamcatcher.gif') }}" alt="Dream Catcher">
+            <h1>FinCatcher</h1>
+            <span class="page-title"><i class="{{ icon }}"></i> {{ page_title }}</span>
+        </div>
+        <a href="{{ url_for('auth.logout') }}" class="logout-btn"><i class="fas fa-sign-out-alt"></i> Logout</a>
     </div>
     <div class="sidebar">
         <div class="sidebar-main">
@@ -98,8 +116,8 @@
             <a href="{{ url_for('export.export_data') }}"><i class="fas fa-download"></i> Export data</a>
         </div>
         <div class="sidebar-bottom">
-            <a href="{{ url_for('main.home') }}"><i class="fas fa-user"></i>Sign Out</a>
-            <a href="{{ url_for('help_sign_out.help_page') }}"><i class="fas fa-question-circle"></i>Help</a>
+            <a href="{{ url_for('auth.register_login') }}"><i class="fas fa-user"></i>Register/Login</a>
+            <a href="{{ url_for('help.help_page') }}"><i class="fas fa-question-circle"></i>Help</a>
         </div>
     </div>
     <div class="content">
