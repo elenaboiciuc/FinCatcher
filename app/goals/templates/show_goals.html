@@ -91,7 +91,7 @@
                         {% else %}
                             {% set percent_progress = (goal.current_amount / goal.target_amount * 100) %}
                             <span style="color:
-                                {% if percent_progress > 70 %} #a94442 {% elif percent_progress > 30 %} #8a6d3b {% else %} #3c763d {% endif %}; font-weight: bold;">
+                                {% if percent_progress > 70 %} #3c763d {% elif percent_progress > 30 %} #8a6d3b {% else %} #a94442 {% endif %}; font-weight: bold;">
                                 {{ percent_progress | round(0) }}%
                             </span>
                         {% endif %}
