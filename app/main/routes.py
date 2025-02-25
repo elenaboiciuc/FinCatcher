@@ -4,11 +4,11 @@ from app.main import main
 from app.main.models import Transactions, Budgets, Goals
 from datetime import datetime
 from dateutil.relativedelta import relativedelta
-from app.extensions import financial_quotes, db, category_icons
+from app.extensions import financial_quotes, category_icons
 from .helpers import (get_transactions_by_date, prepare_data, create_bar_chart,
     create_pie_chart, create_donut_chart, create_line_chart,
-    get_random_quote, get_current_balance, get_categories,
-    update_goal_progress_and_notify, update_budget_progress_and_notify, get_transactions
+    get_random_quote, get_current_balance, get_transactions,
+    update_goal_progress_and_notify, update_budget_progress_and_notify
 )
 
 # route for the home page
@@ -47,7 +47,7 @@ def overview():
     pie_graph = create_pie_chart(transactions_all) # create a pie chart for the user's transactions
     last_month_donut_graph = create_donut_chart(transactions_last_month, 'Last Month') # create a donut chart for last month's transactions
     current_month_donut_graph = create_donut_chart(transactions_current_month, 'This Month') # create a donut chart for the current month's transactions
-    savings_line_chart = create_line_chart(get_transactions_by_date(datetime(current_date.year - 1, 1, 1))) # create a line chart for savings growth
+    savings_line_chart = create_line_chart(get_transactions_by_date(datetime(current_date.year - 1, 1, 1))) # TEST create a line chart for savings growth
 
     # update current amounts and check notifications for all goals and budgets
     update_goal_progress_and_notify(current_user.user_id, category_icons) # update goal progress and notify user if necessary

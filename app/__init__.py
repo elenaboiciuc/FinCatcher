@@ -20,8 +20,7 @@ def create_app():
     # sqlite:///app.db is a URI that tells SQLAlchemy to use an SQLite database located in the file app.db
     # the sqlite:// part specifies the database type, and ///app.db specifies the path to the database file
 
-    app.config[
-        'SQLALCHEMY_TRACK_MODIFICATIONS'] = False  # disable the feature to track modifications, which avoids a warning
+    app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False  # disable the feature to track modifications, which avoids a warning
     app.secret_key = "1234"  # key for data decryption
 
     # initialize extensions
