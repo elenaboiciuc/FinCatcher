@@ -3,15 +3,19 @@
 <head>
     <meta charset="UTF-8">
     <title>FinCatcher</title>
+    <!-- Link to Font Awesome for icons -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <!-- Google Fonts for custom font -->
     <link href="https://fonts.googleapis.com/css2?family=Poiret+One&display=swap" rel="stylesheet">
     <style>
+        /* Basic styles for the body */
         body {
             margin: 0;
             font-family: Arial, sans-serif;
             background-color: #ffffff;
             color: #2c3e50;
         }
+        /* Styles for the header */
         .header {
             background-color: #e6e6fa;
             padding: 10px 20px;
@@ -19,20 +23,23 @@
             align-items: center;
             justify-content: space-between;
             box-shadow: 0px 2px 5px rgba(0, 0, 0, 0.1);
-            position: fixed;
+            position: fixed; /* Fixed position at the top */
             top: 0;
             height: 35px;
             width: 100%;
-            z-index: 1000;
+            z-index: 1000; /* Ensure it appears above other content */
         }
+        /* Styles for the header's left side */
         .header-left {
             display: flex;
             align-items: center;
         }
+        /* Style for the logo image in the header */
         .header img {
             height: 50px;
             margin-right: 10px;
         }
+        /* Styles for the page title */
         .header h1 {
             margin: 0;
             font-size: 24px;
@@ -40,36 +47,41 @@
             color: #de3163;
             text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.5);
         }
+        /* Style for the dynamic page title text */
         .page-title {
             font-size: 16px;
             margin-left: 60px;
             color: #2c3e50;
         }
+        /* Styles for the logout button */
         .logout-btn {
             text-decoration: none;
             color: #2c3e50;
             font-size: 14px;
             padding: 5px 50px;
-            transition: color 0.3s;
+            transition: color 0.3s; /* Transition effect on hover */
         }
         .logout-btn:hover {
-            color:  #de3163;
+            color:  #de3163; /* Change color on hover */
         }
+        /* Styles for the sidebar */
         .sidebar {
             width: 200px;
-            position: fixed;
+            position: fixed; /* Fixed position to the left */
             top: 50px;
             left: 0;
             background-color: #e6e6fa;
             padding: 15px;
             box-shadow: 2px 0px 5px rgba(0, 0, 0, 0.1);
-            height: calc(100vh - 50px);
+            height: calc(100vh - 50px); /* Full height minus header */
             display: flex;
             flex-direction: column;
         }
+        /* Styles for the main content area of the sidebar */
         .sidebar-main {
-            flex-grow: 1;
+            flex-grow: 1; /* Occupies available space */
         }
+        /* Styles for sidebar links */
         .sidebar a {
             display: flex;
             align-items: center;
@@ -77,37 +89,43 @@
             color: #2c3e50;
             text-decoration: none;
             margin-bottom: 10px;
-            transition: background-color 0.3s, color 0.3s;
+            transition: background-color 0.3s, color 0.3s; /* Smooth hover effects */
         }
         .sidebar a:hover {
-            background-color: #de3163;
-            color: #fff;
+            background-color: #de3163; /* Highlight on hover */
+            color: #fff; /* Change text color on hover */
         }
         .sidebar a i {
-            margin-right: 10px;
+            margin-right: 10px; /* Space between icon and text */
         }
+        /* Styles for the bottom section of the sidebar */
         .sidebar-bottom {
-            margin-top: auto;
-            margin-bottom: 20px;
+            margin-top: auto; /* Pushes to the bottom */
+            margin-bottom: 20px; /* Space from the bottom */
         }
+        /* Styles for the main content area */
         .content {
-            margin-left: 220px;
+            margin-left: 220px; /* Space for the sidebar */
             padding: 20px;
-            padding-top: 60px; /* adjust padding to account for fixed header */
+            padding-top: 60px; /* Adjust padding to account for fixed header */
         }
     </style>
 </head>
 <body>
     <div class="header">
         <div class="header-left">
+            <!-- Logo and title -->
             <img src="{{ url_for('static', filename='images/dreamcatcher.gif') }}" alt="Dream Catcher">
             <h1>FinCatcher</h1>
+            <!-- Page title and icon -->
             <span class="page-title"><i class="{{ icon }}"></i> {{ page_title }}</span>
         </div>
+        <!-- Logout button -->
         <a href="{{ url_for('auth.logout') }}" class="logout-btn"><i class="fas fa-sign-out-alt"></i> Logout</a>
     </div>
     <div class="sidebar">
         <div class="sidebar-main">
+            <!-- Sidebar navigation links -->
             <a href="{{ url_for('main.overview') }}"><i class="fas fa-home"></i>Overview</a>
             <a href="{{ url_for('transactions.transactions_page') }}"><i class="fas fa-credit-card"></i>Transactions</a>
             <a href="{{ url_for('budgets.budgets_page') }}"><i class="fa-solid fa-coins"></i>Budgets</a>
@@ -116,12 +134,14 @@
             <a href="{{ url_for('export.export_data') }}"><i class="fas fa-download"></i> Export data</a>
         </div>
         <div class="sidebar-bottom">
+            <!-- Additional links for registration/login and help -->
             <a href="{{ url_for('auth.register_login') }}"><i class="fas fa-user"></i>Register/Login</a>
             <a href="{{ url_for('help.help_page') }}"><i class="fas fa-question-circle"></i>Help</a>
         </div>
     </div>
     <div class="content">
         {% block content %}
+            <!-- Welcome message and main content block -->
             <div style="text-align: center; padding: 20px;">
                 <h2 style="
                     margin: 0;
@@ -132,8 +152,10 @@
                     margin-bottom: 10px;
                 ">Welcome to FinCatcher!</h2>
                 <p style="font-size: 18px; margin-bottom: 20px;">Your one-stop solution for managing budgets and finances.</p>
+                <!-- Logo image in the content area -->
                 <img src="{{ url_for('static', filename='images/dreamcatcher.gif') }}" alt="Dream Catcher" width="150" height="150">
                 <div style="display: flex; justify-content: center; gap: 20px;">
+                    <!-- Links for Register/Login and Help actions -->
                     <a href="{{ url_for('auth.register_login') }}" style="font-size: 18px; color: #4B0082; text-decoration: none; padding: 10px 15px; border: 1px solid #4B0082; border-radius: 5px; transition: background-color 0.3s;">
                         Register/Login
                     </a>
