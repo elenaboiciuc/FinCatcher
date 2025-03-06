@@ -1,10 +1,10 @@
 import random
-from datetime import datetime, timedelta
+from datetime import datetime, timedelta, time
 import pandas as pd
 import plotly.express as px
 from flask import flash
 from flask_login import current_user
-from sqlalchemy import or_
+from sqlalchemy import or_, func
 from app.extensions import db
 from app.main.models import Transactions, Categories, Budgets, Goals
 
@@ -20,7 +20,7 @@ def get_transactions():
 def get_categories():
     """ fetch all categories for the current user + default categories """
     return Categories.query.filter(
-        or_(Categories.id <= 16, Categories.user_id == current_user.user_id)
+        or_(Categories.id <= 18, Categories.user_id == current_user.user_id)
     ).all()
 
 def update_budget_progress_and_notify(user_id, category_icons):
@@ -108,7 +108,14 @@ def update_goal_progress_and_notify(user_id, category_icons):
 
 def get_transactions_by_date(start_date):
     """ fetch transactions for the current user starting from a specific date """
-    return Transactions.query.filter(Transactions.date >= start_date, Transactions.user_id == current_user.user_id)
+    start_of_day = datetime.combine(start_date, time.min)
+    query = Transactions.query.filter(
+        func.date(Transactions.date) >= func.date(start_of_day),
+        Transactions.user_id == current_user.user_id
+    )
+
+    transactions = query.all()
+    return transactions
 
 def prepare_data(transactions):
     """ prepare data for plotting from transactions, returning a DataFrame """
@@ -123,13 +130,13 @@ def prepare_data(transactions):
 
 def get_current_balance(transactions):
     """ calculate the current balance based on income and expenses """
-    current_balance = 0 # initialize balance
+    current_balance = 0  # initialize balance
     for transaction in transactions:
         if transaction.type == 'income':
             current_balance += transaction.amount  # add income
         elif transaction.type == 'expense':
-            current_balance -= transaction.amount # subtract expenses
-    return current_balance # return the current balance
+            current_balance -= transaction.amount  # subtract expenses
+    return round(current_balance, 2)  # return the current balance rounded to 2 decimal places
 
 def create_bar_chart(df):
     """ create a bar chart comparing monthly expenses and income """

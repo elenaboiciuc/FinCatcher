@@ -42,12 +42,13 @@ def overview():
     # calculate the current balance based on the current month's transactions
     current_balance = get_current_balance(transactions_current_month)
 
+
     # generate graphs
     bar_graph = create_bar_chart(prepare_data(transactions_six_months_ago)) # create a bar chart for the last six months of data
     pie_graph = create_pie_chart(transactions_all) # create a pie chart for the user's transactions
     last_month_donut_graph = create_donut_chart(transactions_last_month, 'Last Month') # create a donut chart for last month's transactions
     current_month_donut_graph = create_donut_chart(transactions_current_month, 'This Month') # create a donut chart for the current month's transactions
-    savings_line_chart = create_line_chart(get_transactions_by_date(datetime(current_date.year - 1, 1, 1))) # TEST create a line chart for savings growth
+    savings_line_chart = create_line_chart(get_transactions_by_date(datetime(current_date.year, 1, 1))) # create a line chart for savings growth
 
     # update current amounts and check notifications for all goals and budgets
     update_goal_progress_and_notify(current_user.user_id, category_icons) # update goal progress and notify user if necessary

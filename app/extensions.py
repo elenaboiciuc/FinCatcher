@@ -29,8 +29,10 @@ category_icons = {
     13: 'static/images/earnings.png',
     14: 'static/images/shopping.png',
     15: 'static/images/pets.png',
-    16: 'static/images/others.png',
-    17: 'static/images/new_category.png' # placeholder for a new category icon
+    16: 'static/images/credit.png',
+    17: 'static/images/unexpected.png',
+    18: 'static/images/others.png',
+    19: 'static/images/new_category.png' # placeholder for a new category icon
 }
 
 # mapping of category IDs to respective GIF image paths for dynamic visuals
@@ -50,8 +52,10 @@ category_gifs = {
     13: 'static/images/earnings.gif',
     14: 'static/images/shopping.gif',
     15: 'static/images/pets.gif',
-    16: 'static/images/others.gif',
-    17: 'static/images/new_category.gif' # placeholder for a new category gif
+    16: 'static/images/credit.gif',
+    17: 'static/images/unexpected.gif',
+    18: 'static/images/others.gif',
+    19: 'static/images/new_category.gif'  # placeholder for a new category icon
 }
 
 # collection of financial quotes to inspire users towards better financial management
@@ -76,7 +80,8 @@ financial_quotes = {
     18: "Debt and ignorance don’t mix. ⚠️",
     19: "Only save what’s extra. ✨",
     20: "Start small, grow your savings. 🌿",
-    21: "Shop smart, save big. 🛒"
+    21: "Shop smart, save big. 🛒",
+    22: "Save for snow! ❄️"
     # more quotes can be added to motivate users in managing their finances
 }
 
