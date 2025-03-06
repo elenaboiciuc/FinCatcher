@@ -61,13 +61,13 @@
                 {% for category in categories %}
                 <tr style="background-color: {% if loop.index0 % 2 == 0 %} #FFFFFF {% else %} #F5F5F5 {% endif %};">
                     <td style="padding: 0; border: 1px solid #DDD; text-align: center;">
-                        <img src="{{ category_icons[category.id if category.id <= 16 else 17] }}" alt="{{ category.id }} icon" style="width:24px; height:24px;">
+                        <img src="{{ category_icons[category.id if category.id <= 18 else 19] }}" alt="{{ category.id }} icon" style="width:24px; height:24px;">
                     </td>
                     <td style="padding: 10px; border: 1px solid #DDD;">{{ category.name }}</td>
                     <td style="padding: 10px; border: 1px solid #DDD;">{{ category.description }}</td>
                     <td style="padding: 10px; border: 1px solid #DDD;">
                         <!-- EDIT ACTION -->
-                        {% if category.id > 16 %}
+                        {% if category.id > 18 %}
                         <a href="{{ url_for('categories.edit_category', id=category.id) }}" class="edit-btn" style="color: #4B0082;">
                             <i class="fa-regular fa-pen-to-square"></i>
                         </a>
@@ -75,7 +75,7 @@
                     </td>
                     <td style="padding: 10px; border: 1px solid #DDD;">
                         <div style="display: flex; justify-content: center; align-items: center; gap: 0;">
-                            {% if category.id > 16 %}
+                            {% if category.id > 18 %}
                                 <!-- DELETE ACTION -->
                                 <a href="{{ url_for('categories.delete_category', id=category.id) }}" class="delete-btn" style="display: flex; justify-content: center; align-items: center; width: 24px; height: 24px; color: #4B0082;" onclick="confirmDelete(event, {{ category.id }});">
                                     <i class="fas fa-trash-alt"></i>
